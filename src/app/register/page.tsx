@@ -83,7 +83,7 @@ export default function RegisterPage() {
             className="text-3xl font-bold text-brand-orange mb-1"
             style={{ fontFamily: "var(--font-bricolage)" }}
           >
-            Brain Buzz
+            How Smart Are You?
           </h1>
           <p className="text-text-secondary text-sm">
             by Smart Caffeine · Weekly Quiz Challenge

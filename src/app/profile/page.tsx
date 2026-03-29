@@ -97,7 +97,7 @@ function ProfileContent({ user }: { user: { email: string; name: string } }) {
         </div>
         <div className="bg-bg-card rounded-xl p-4 border border-white/5 text-center">
           <div className="text-2xl font-bold text-brand-orange">
-            {profile.topics_played_this_week.length}/5
+            {profile.topics_played_this_week.length}/{TOPICS.length}
           </div>
           <div className="text-xs text-text-secondary mt-1">This Week</div>
         </div>

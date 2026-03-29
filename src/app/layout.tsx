@@ -15,21 +15,21 @@ const bricolage = Bricolage_Grotesque({
 });
 
 export const metadata: Metadata = {
-  title: "Brain Buzz — Smart Caffeine Weekly Quiz",
+  title: "How Smart Are You? — Smart Caffeine Weekly Quiz",
   description:
-    "Test your knowledge across 5 topics! Score high, earn badges, climb leaderboards, and share your results. New questions every week. Powered by Smart Caffeine.",
+    "Test your knowledge across 6 topics! Score high, earn badges, climb leaderboards, and share your results. New questions every week. Powered by Smart Caffeine.",
   openGraph: {
-    title: "Brain Buzz — Smart Caffeine Weekly Quiz",
+    title: "How Smart Are You? — Smart Caffeine Weekly Quiz",
     description:
-      "5 topics. 10 questions. One attempt. Can you top the leaderboard?",
+      "6 topics. 10 questions. One attempt. Can you top the leaderboard?",
     type: "website",
     url: "https://smartcaffeine.com/quiz",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Brain Buzz — Smart Caffeine Weekly Quiz",
+    title: "How Smart Are You? — Smart Caffeine Weekly Quiz",
     description:
-      "5 topics. 10 questions. One attempt. Can you top the leaderboard?",
+      "6 topics. 10 questions. One attempt. Can you top the leaderboard?",
   },
 };
 

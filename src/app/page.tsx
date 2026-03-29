@@ -94,7 +94,7 @@ function HomeContent({ user }: { user: { email: string; name: string } }) {
                 All done this week!
               </h2>
               <p className="text-text-secondary">
-                You&apos;ve played all 5 topics. See you next Monday!
+                You&apos;ve played all 6 topics. See you next Monday!
               </p>
               <button
                 onClick={() => router.push("/leaderboard")}

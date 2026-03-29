@@ -11,6 +11,7 @@ export const TOPICS: Topic[] = [
   { slug: "science", name: "Science", emoji: "🔬", dbName: "Science" },
   { slug: "business", name: "Business & Startups", emoji: "📈", dbName: "Business & Startups" },
   { slug: "coffee", name: "Coffee & Caffeine", emoji: "☕", dbName: "Coffee & Caffeine" },
+  { slug: "health-fitness", name: "Health & Fitness", emoji: "💪", dbName: "Health & Fitness" },
 ];
 
 export function getTopicBySlug(slug: string): Topic | undefined {

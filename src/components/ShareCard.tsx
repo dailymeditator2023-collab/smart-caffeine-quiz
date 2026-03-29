@@ -64,7 +64,7 @@ export default function ShareCard({
     // Week badge
     ctx.font = "24px system-ui, sans-serif";
     ctx.fillStyle = "rgba(255,255,255,0.5)";
-    ctx.fillText(`BRAIN BUZZ · WEEK ${weekNumber}`, 540, 260);
+    ctx.fillText(`HOW SMART ARE YOU? · WEEK ${weekNumber}`, 540, 260);
 
     // Topic pill
     const topicText = `${topicEmoji} ${topic}`;
