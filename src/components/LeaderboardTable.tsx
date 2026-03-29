@@ -7,20 +7,22 @@ interface LeaderboardEntry {
   time_seconds: number;
   badges: string[];
   topic?: string;
+  quizCount?: number;
   isYou: boolean;
 }
 
 interface LeaderboardTableProps {
   entries: LeaderboardEntry[];
   showTopic?: boolean;
+  showQuizCount?: boolean;
 }
 
-export default function LeaderboardTable({ entries, showTopic = false }: LeaderboardTableProps) {
+export default function LeaderboardTable({ entries, showTopic = false, showQuizCount = false }: LeaderboardTableProps) {
   if (entries.length === 0) {
     return (
       <div className="text-center py-12 text-text-secondary">
         <p className="text-4xl mb-3">🏜️</p>
-        <p>No entries yet this week. Be the first!</p>
+        <p>No entries yet. Be the first!</p>
       </div>
     );
   }
@@ -68,12 +70,19 @@ export default function LeaderboardTable({ entries, showTopic = false }: Leaderb
             {showTopic && entry.topic && (
               <span className="text-xs text-text-secondary">{entry.topic}</span>
             )}
+            {showQuizCount && entry.quizCount && (
+              <span className="text-xs text-text-secondary">{entry.quizCount} quizzes played</span>
+            )}
           </div>
 
           {/* Score + Time */}
           <div className="text-right">
-            <div className="font-bold text-neon-green">{entry.score}/10</div>
-            <div className="text-xs text-text-secondary">{formatTime(entry.time_seconds)}</div>
+            <div className="font-bold text-neon-green">
+              {showQuizCount ? entry.score : `${entry.score}/10`}
+            </div>
+            <div className="text-xs text-text-secondary">
+              {showQuizCount ? "total pts" : formatTime(entry.time_seconds)}
+            </div>
           </div>
         </div>
       ))}

@@ -21,7 +21,7 @@ export async function GET(req: NextRequest) {
     .select("id, topic, question, options")  // NOTE: correct_index is NOT selected
     .eq("topic", topic)
     .eq("active", true)
-    .or(`week_number.is.null,week_number.eq.${weekNumber}`);
+    .eq("week_number", weekNumber);
 
   if (error) {
     return NextResponse.json({ error: error.message }, { status: 500 });

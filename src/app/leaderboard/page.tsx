@@ -15,6 +15,7 @@ interface LeaderboardEntry {
   time_seconds: number;
   badges: string[];
   topic: string;
+  quizCount?: number;
   isYou: boolean;
 }
 
@@ -30,6 +31,7 @@ function LeaderboardContent() {
   const searchParams = useSearchParams();
   const initialTopic = searchParams.get("topic") || "All";
 
+  const [mode, setMode] = useState<"weekly" | "alltime">("weekly");
   const [selectedTopic, setSelectedTopic] = useState(initialTopic);
   const [entries, setEntries] = useState<LeaderboardEntry[]>([]);
   const [champions, setChampions] = useState<Champion[]>([]);
@@ -40,17 +42,18 @@ function LeaderboardContent() {
 
   useEffect(() => {
     setLoading(true);
-    const topicParam = selectedTopic === "All" ? "" : `&topic=${encodeURIComponent(selectedTopic)}`;
-    fetch(`/api/leaderboard?week=${weekNumber}${topicParam}&email=${encodeURIComponent(email)}`)
+    const topicParam = mode === "weekly" && selectedTopic !== "All"
+      ? `&topic=${encodeURIComponent(selectedTopic)}`
+      : "";
+    fetch(`/api/leaderboard?week=${weekNumber}${topicParam}&email=${encodeURIComponent(email)}&mode=${mode}`)
       .then((r) => r.json())
       .then((data) => {
         setEntries(data.leaderboard || []);
       })
       .catch(console.error)
       .finally(() => setLoading(false));
-  }, [selectedTopic, weekNumber, email]);
+  }, [selectedTopic, weekNumber, email, mode]);
 
-  // Load hall of fame once
   useEffect(() => {
     fetch("/api/hall-of-fame")
       .then((r) => r.json())
@@ -66,12 +69,40 @@ function LeaderboardContent() {
       >
         🏆 Leaderboard
       </h1>
-      <p className="text-text-secondary text-sm mb-4">Week {weekNumber}</p>
+      <p className="text-text-secondary text-sm mb-4">
+        {mode === "weekly" ? `Week ${weekNumber}` : "All Time"}
+      </p>
 
-      {/* Topic tabs */}
-      <div className="mb-6">
-        <TopicTabs selected={selectedTopic} onSelect={setSelectedTopic} />
+      {/* Weekly / All-Time toggle */}
+      <div className="flex bg-bg-card rounded-xl p-1 mb-4 border border-white/5">
+        <button
+          onClick={() => setMode("weekly")}
+          className={`flex-1 py-2 rounded-lg text-sm font-medium transition-all ${
+            mode === "weekly"
+              ? "bg-brand-orange text-bg-dark"
+              : "text-text-secondary hover:text-text-primary"
+          }`}
+        >
+          📅 This Week
+        </button>
+        <button
+          onClick={() => setMode("alltime")}
+          className={`flex-1 py-2 rounded-lg text-sm font-medium transition-all ${
+            mode === "alltime"
+              ? "bg-brand-orange text-bg-dark"
+              : "text-text-secondary hover:text-text-primary"
+          }`}
+        >
+          🌟 All Time
+        </button>
       </div>
+
+      {/* Topic tabs — only for weekly */}
+      {mode === "weekly" && (
+        <div className="mb-6">
+          <TopicTabs selected={selectedTopic} onSelect={setSelectedTopic} />
+        </div>
+      )}
 
       {/* Leaderboard */}
       {loading ? (
@@ -81,7 +112,11 @@ function LeaderboardContent() {
           ))}
         </div>
       ) : (
-        <LeaderboardTable entries={entries} showTopic={selectedTopic === "All"} />
+        <LeaderboardTable
+          entries={entries}
+          showTopic={mode === "weekly" && selectedTopic === "All"}
+          showQuizCount={mode === "alltime"}
+        />
       )}
 
       {/* Hall of Fame */}
