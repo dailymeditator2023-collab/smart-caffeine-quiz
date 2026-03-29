@@ -1,0 +1,131 @@
+@import "tailwindcss";
+
+:root {
+  /* Smart Caffeine brand palette */
+  --brand-orange: #ff6633;
+  --brand-orange-light: #ff8855;
+  --neon-green: #34d399;
+  --neon-pink: #ff3a6e;
+  --neon-blue: #4d8dff;
+  --neon-yellow: #ffe14d;
+  --bg-dark: #121212;
+  --bg-card: #1e1e1e;
+  --bg-card-hover: #2a2a2a;
+  --text-primary: #f5f5f5;
+  --text-secondary: #9ca3af;
+}
+
+@theme inline {
+  --color-brand-orange: var(--brand-orange);
+  --color-brand-orange-light: var(--brand-orange-light);
+  --color-neon-green: var(--neon-green);
+  --color-neon-pink: var(--neon-pink);
+  --color-neon-blue: var(--neon-blue);
+  --color-neon-yellow: var(--neon-yellow);
+  --color-bg-dark: var(--bg-dark);
+  --color-bg-card: var(--bg-card);
+  --color-bg-card-hover: var(--bg-card-hover);
+  --color-text-primary: var(--text-primary);
+  --color-text-secondary: var(--text-secondary);
+}
+
+body {
+  background: var(--bg-dark);
+  color: var(--text-primary);
+}
+
+/* ---- Animations ---- */
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeInScale {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 20px rgba(255, 102, 51, 0.3); }
+  50% { box-shadow: 0 0 40px rgba(255, 102, 51, 0.6); }
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-5px); }
+  75% { transform: translateX(5px); }
+}
+
+@keyframes countdown {
+  from { width: 100%; }
+  to { width: 0%; }
+}
+
+@keyframes slideIn {
+  from { opacity: 0; transform: translateX(-10px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes popIn {
+  0% { opacity: 0; transform: scale(0.5); }
+  70% { transform: scale(1.1); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.4s ease-out;
+}
+
+.animate-fade-in-scale {
+  animation: fadeInScale 0.3s ease-out;
+}
+
+.animate-pulse-glow {
+  animation: pulse-glow 2s ease-in-out infinite;
+}
+
+.animate-shake {
+  animation: shake 0.3s ease-in-out;
+}
+
+.animate-slide-in {
+  animation: slideIn 0.3s ease-out;
+}
+
+.animate-pop-in {
+  animation: popIn 0.4s ease-out;
+}
+
+/* ---- Quiz option states ---- */
+
+.option-selected {
+  background: var(--brand-orange) !important;
+  border-color: var(--brand-orange) !important;
+  color: white !important;
+}
+
+.option-correct {
+  background: var(--neon-green) !important;
+  border-color: var(--neon-green) !important;
+  color: #121212 !important;
+}
+
+.option-wrong {
+  background: var(--neon-pink) !important;
+  border-color: var(--neon-pink) !important;
+  color: white !important;
+}
+
+/* ---- Scrollbar ---- */
+
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #333;
+  border-radius: 3px;
+}
