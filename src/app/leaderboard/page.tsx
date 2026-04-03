@@ -6,7 +6,7 @@ import NavBar from "@/components/NavBar";
 import TopicTabs from "@/components/TopicTabs";
 import LeaderboardTable from "@/components/LeaderboardTable";
 import HallOfFame from "@/components/HallOfFame";
-import { getWeekNumber } from "@/lib/week";
+import { getWeekNumber, MONTHLY_PRIZE } from "@/lib/week";
 
 interface LeaderboardEntry {
   rank: number;
@@ -16,6 +16,7 @@ interface LeaderboardEntry {
   badges: string[];
   topic: string;
   quizCount?: number;
+  weeksPlayed?: number;
   isYou: boolean;
 }
 
@@ -31,10 +32,11 @@ function LeaderboardContent() {
   const searchParams = useSearchParams();
   const initialTopic = searchParams.get("topic") || "All";
 
-  const [mode, setMode] = useState<"weekly" | "alltime">("weekly");
+  const [mode, setMode] = useState<"weekly" | "monthly" | "alltime">("weekly");
   const [selectedTopic, setSelectedTopic] = useState(initialTopic);
   const [entries, setEntries] = useState<LeaderboardEntry[]>([]);
   const [champions, setChampions] = useState<Champion[]>([]);
+  const [monthLabel, setMonthLabel] = useState("");
   const [loading, setLoading] = useState(true);
   const weekNumber = getWeekNumber();
 
@@ -49,6 +51,7 @@ function LeaderboardContent() {
       .then((r) => r.json())
       .then((data) => {
         setEntries(data.leaderboard || []);
+        if (data.monthLabel) setMonthLabel(data.monthLabel);
       })
       .catch(console.error)
       .finally(() => setLoading(false));
@@ -61,6 +64,12 @@ function LeaderboardContent() {
       .catch(console.error);
   }, []);
 
+  const subtitle = mode === "weekly"
+    ? `Week ${weekNumber}`
+    : mode === "monthly"
+    ? monthLabel || "This Month"
+    : "All Time";
+
   return (
     <div className="max-w-lg w-full animate-fade-in">
       <h1
@@ -70,10 +79,10 @@ function LeaderboardContent() {
         🏆 Leaderboard
       </h1>
       <p className="text-text-secondary text-sm mb-4">
-        {mode === "weekly" ? `Week ${weekNumber}` : "All Time"}
+        {subtitle}
       </p>
 
-      {/* Weekly / All-Time toggle */}
+      {/* Weekly / Monthly / All-Time toggle */}
       <div className="flex bg-bg-card rounded-xl p-1 mb-4 border border-white/5">
         <button
           onClick={() => setMode("weekly")}
@@ -83,7 +92,17 @@ function LeaderboardContent() {
               : "text-text-secondary hover:text-text-primary"
           }`}
         >
-          📅 This Week
+          📅 Week
+        </button>
+        <button
+          onClick={() => setMode("monthly")}
+          className={`flex-1 py-2 rounded-lg text-sm font-medium transition-all ${
+            mode === "monthly"
+              ? "bg-brand-orange text-bg-dark"
+              : "text-text-secondary hover:text-text-primary"
+          }`}
+        >
+          🏆 Month
         </button>
         <button
           onClick={() => setMode("alltime")}
@@ -96,6 +115,24 @@ function LeaderboardContent() {
           🌟 All Time
         </button>
       </div>
+
+      {/* Monthly prize banner */}
+      {mode === "monthly" && (
+        <div className="bg-gradient-to-r from-neon-yellow/10 to-brand-orange/10 rounded-xl p-4 mb-4 border border-neon-yellow/20">
+          <div className="flex items-center gap-3">
+            <span className="text-3xl">💰</span>
+            <div>
+              <p className="font-bold text-neon-yellow text-lg">
+                Win ₹{MONTHLY_PRIZE.toLocaleString("en-IN")}!
+              </p>
+              <p className="text-text-secondary text-xs">
+                #1 on the monthly leaderboard wins the cash prize.
+                Points = Total Score + 5 bonus per week played.
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Topic tabs — only for weekly */}
       {mode === "weekly" && (
@@ -116,6 +153,7 @@ function LeaderboardContent() {
           entries={entries}
           showTopic={mode === "weekly" && selectedTopic === "All"}
           showQuizCount={mode === "alltime"}
+          showMonthly={mode === "monthly"}
         />
       )}
 

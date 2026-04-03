@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getSupabase } from "@/lib/supabase";
-import { getWeekNumber } from "@/lib/week";
+import { getWeekNumber, getMonthWeekRange, WEEKLY_PLAY_BONUS, MONTHLY_PRIZE } from "@/lib/week";
 
 export const dynamic = "force-dynamic";
 
@@ -10,9 +10,95 @@ export async function GET(req: NextRequest) {
   const topic = searchParams.get("topic");
   const weekParam = searchParams.get("week");
   const email = searchParams.get("email")?.toLowerCase();
-  const mode = searchParams.get("mode") || "weekly"; // "weekly" or "alltime"
+  const mode = searchParams.get("mode") || "weekly"; // "weekly", "alltime", or "monthly"
 
   const weekNumber = weekParam ? parseInt(weekParam) : getWeekNumber();
+
+  if (mode === "monthly") {
+    // Monthly leaderboard: total score + bonus per week played
+    const { startWeek, endWeek, monthLabel } = getMonthWeekRange();
+
+    const { data: attempts, error } = await supabase
+      .from("attempts")
+      .select("email, score, time_seconds, week_number, user_id")
+      .gte("week_number", startWeek)
+      .lte("week_number", endWeek);
+
+    if (error) {
+      return NextResponse.json({ error: error.message }, { status: 500 });
+    }
+
+    // Aggregate per user: total score + unique weeks played
+    const userStats = new Map<string, {
+      user_id: string;
+      email: string;
+      totalScore: number;
+      totalTime: number;
+      quizCount: number;
+      weeksPlayed: Set<number>;
+    }>();
+
+    for (const a of attempts || []) {
+      const existing = userStats.get(a.email);
+      if (existing) {
+        existing.totalScore += a.score;
+        existing.totalTime += a.time_seconds;
+        existing.quizCount += 1;
+        existing.weeksPlayed.add(a.week_number);
+      } else {
+        userStats.set(a.email, {
+          user_id: a.user_id,
+          email: a.email,
+          totalScore: a.score,
+          totalTime: a.time_seconds,
+          quizCount: 1,
+          weeksPlayed: new Set([a.week_number]),
+        });
+      }
+    }
+
+    // Calculate monthly points: totalScore + (weeksPlayed × WEEKLY_PLAY_BONUS)
+    const withPoints = [...userStats.values()].map((s) => ({
+      ...s,
+      weeksCount: s.weeksPlayed.size,
+      monthlyPoints: s.totalScore + s.weeksPlayed.size * WEEKLY_PLAY_BONUS,
+    }));
+
+    // Sort by monthly points DESC, then total time ASC
+    const sorted = withPoints
+      .sort((a, b) => b.monthlyPoints - a.monthlyPoints || a.totalTime - b.totalTime)
+      .slice(0, 50);
+
+    // Get user names
+    const userIds = [...new Set(sorted.map((s) => s.user_id))];
+    const { data: users } = await supabase
+      .from("users")
+      .select("id, name")
+      .in("id", userIds);
+
+    const nameMap = new Map((users || []).map((u) => [u.id, u.name]));
+
+    const leaderboard = sorted.map((s, index) => ({
+      rank: index + 1,
+      name: nameMap.get(s.user_id) || "Anonymous",
+      score: s.monthlyPoints,
+      quizCount: s.quizCount,
+      weeksPlayed: s.weeksCount,
+      time_seconds: s.totalTime,
+      badges: [],
+      topic: "",
+      isYou: email ? s.email === email : false,
+    }));
+
+    return NextResponse.json({
+      leaderboard,
+      weekNumber,
+      mode: "monthly",
+      monthLabel,
+      prize: MONTHLY_PRIZE,
+      formula: `Total Score + ${WEEKLY_PLAY_BONUS} pts per week played`,
+    });
+  }
 
   if (mode === "alltime") {
     // All-time leaderboard: aggregate total score across all attempts per user

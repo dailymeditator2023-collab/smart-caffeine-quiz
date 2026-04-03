@@ -8,6 +8,7 @@ interface LeaderboardEntry {
   badges: string[];
   topic?: string;
   quizCount?: number;
+  weeksPlayed?: number;
   isYou: boolean;
 }
 
@@ -15,9 +16,10 @@ interface LeaderboardTableProps {
   entries: LeaderboardEntry[];
   showTopic?: boolean;
   showQuizCount?: boolean;
+  showMonthly?: boolean;
 }
 
-export default function LeaderboardTable({ entries, showTopic = false, showQuizCount = false }: LeaderboardTableProps) {
+export default function LeaderboardTable({ entries, showTopic = false, showQuizCount = false, showMonthly = false }: LeaderboardTableProps) {
   if (entries.length === 0) {
     return (
       <div className="text-center py-12 text-text-secondary">
@@ -35,6 +37,8 @@ export default function LeaderboardTable({ entries, showTopic = false, showQuizC
           className={`flex items-center gap-3 p-3 rounded-xl transition-all ${
             entry.isYou
               ? "bg-neon-green/10 border border-neon-green/30"
+              : showMonthly && entry.rank === 1
+              ? "bg-neon-yellow/10 border border-neon-yellow/30"
               : "bg-bg-card/50 border border-white/5"
           }`}
         >
@@ -66,6 +70,11 @@ export default function LeaderboardTable({ entries, showTopic = false, showQuizC
                   you
                 </span>
               )}
+              {showMonthly && entry.rank === 1 && (
+                <span className="text-xs bg-neon-yellow/20 text-neon-yellow px-1.5 py-0.5 rounded font-medium">
+                  💰 ₹5,000
+                </span>
+              )}
             </div>
             {showTopic && entry.topic && (
               <span className="text-xs text-text-secondary">{entry.topic}</span>
@@ -73,15 +82,20 @@ export default function LeaderboardTable({ entries, showTopic = false, showQuizC
             {showQuizCount && entry.quizCount && (
               <span className="text-xs text-text-secondary">{entry.quizCount} quizzes played</span>
             )}
+            {showMonthly && (
+              <span className="text-xs text-text-secondary">
+                {entry.quizCount} quizzes · {entry.weeksPlayed || 0}w played
+              </span>
+            )}
           </div>
 
           {/* Score + Time */}
           <div className="text-right">
-            <div className="font-bold text-neon-green">
-              {showQuizCount ? entry.score : `${entry.score}/10`}
+            <div className={`font-bold ${showMonthly && entry.rank === 1 ? "text-neon-yellow" : "text-neon-green"}`}>
+              {showQuizCount || showMonthly ? `${entry.score} pts` : `${entry.score}/10`}
             </div>
             <div className="text-xs text-text-secondary">
-              {showQuizCount ? "total pts" : formatTime(entry.time_seconds)}
+              {showQuizCount || showMonthly ? "total" : formatTime(entry.time_seconds)}
             </div>
           </div>
         </div>

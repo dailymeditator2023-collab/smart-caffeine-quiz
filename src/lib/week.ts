@@ -11,3 +11,34 @@ export function formatTime(seconds: number): string {
   const secs = seconds % 60;
   return `${mins}:${secs.toString().padStart(2, "0")}`;
 }
+
+/** Get the month label (e.g. "April 2026") for a given date */
+export function getMonthLabel(date: Date = new Date()): string {
+  return date.toLocaleDateString("en-IN", { month: "long", year: "numeric" });
+}
+
+/** Get the start and end week numbers for the current month */
+export function getMonthWeekRange(date: Date = new Date()): { startWeek: number; endWeek: number; monthLabel: string } {
+  const year = date.getFullYear();
+  const month = date.getMonth();
+
+  // First day of current month
+  const firstDay = new Date(year, month, 1);
+  // Last day of current month
+  const lastDay = new Date(year, month + 1, 0);
+
+  const startWeek = getWeekNumber(firstDay);
+  const endWeek = getWeekNumber(lastDay);
+
+  return {
+    startWeek,
+    endWeek,
+    monthLabel: getMonthLabel(date),
+  };
+}
+
+/** Bonus points per week played (for monthly leaderboard) */
+export const WEEKLY_PLAY_BONUS = 5;
+
+/** Monthly prize amount */
+export const MONTHLY_PRIZE = 5000;
