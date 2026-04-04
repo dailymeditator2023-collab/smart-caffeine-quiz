@@ -12,8 +12,8 @@ export function promoBlock(campaign: string): string {
     <div style="background: linear-gradient(135deg, #1a0a00, #2a1000); border-radius:12px; padding:20px; margin-top:24px; border:1px solid #ff6633;">
       <table width="100%" cellpadding="0" cellspacing="0">
         <tr>
-          <td style="width:60px; vertical-align:top;">
-            <span style="font-size:40px;">☕</span>
+          <td style="width:100px; vertical-align:top;">
+            <img src="https://smartcaffeine-quiz.vercel.app/smart-caffeine-product.webp" alt="Smart Caffeine" width="90" style="width:90px; height:auto; border-radius:8px;">
           </td>
           <td style="padding-left:12px;">
             <p style="color:#ff6633; font-weight:700; font-size:16px; margin:0 0 4px;">
