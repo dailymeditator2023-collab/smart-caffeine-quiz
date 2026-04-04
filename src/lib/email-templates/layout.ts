@@ -9,25 +9,21 @@ export function trackUrl(url: string, campaign: string, content: string): string
 export function promoBlock(campaign: string): string {
   const buyUrl = trackUrl(`${PRODUCT_URL}?order=true`, campaign, "buy_button");
   return `
-    <div style="background: linear-gradient(135deg, #1a0a00, #2a1000); border-radius:12px; padding:20px; margin-top:24px; border:1px solid #ff6633;">
-      <table width="100%" cellpadding="0" cellspacing="0">
-        <tr>
-          <td style="width:100px; vertical-align:top;">
-            <img src="https://smartcaffeine-quiz.vercel.app/smart-caffeine-product.webp" alt="Smart Caffeine" width="90" style="width:90px; height:auto; border-radius:8px;">
-          </td>
-          <td style="padding-left:12px;">
-            <p style="color:#ff6633; font-weight:700; font-size:16px; margin:0 0 4px;">
-              Fuel Your Brain with Smart Caffeine
-            </p>
-            <p style="color:#9ca3af; font-size:13px; margin:0 0 12px;">
-              L-Theanine + Caffeine for calm, focused energy. No jitters, no crash.
-            </p>
-            <a href="${buyUrl}" style="display:inline-block; padding:10px 24px; background-color:#ff6633; color:#fff; font-weight:700; font-size:14px; text-decoration:none; border-radius:10px;">
-              Order Now →
-            </a>
-          </td>
-        </tr>
-      </table>
+    <div style="background: linear-gradient(135deg, #1a0a00, #2a1000); border-radius:16px; padding:24px; margin-top:24px; border:1px solid #ff6633;">
+      <div style="text-align:center; margin-bottom:16px;">
+        <img src="https://smartcaffeine-quiz.vercel.app/smart-caffeine-product.webp" alt="Smart Caffeine" width="280" style="width:280px; height:auto; border-radius:12px;">
+      </div>
+      <div style="text-align:center;">
+        <p style="color:#ff6633; font-weight:700; font-size:20px; margin:0 0 8px;">
+          Fuel Your Brain with Smart Caffeine
+        </p>
+        <p style="color:#9ca3af; font-size:14px; margin:0 0 16px;">
+          L-Theanine + Caffeine for calm, focused energy. No jitters, no crash.
+        </p>
+        <a href="${buyUrl}" style="display:inline-block; padding:14px 36px; background-color:#ff6633; color:#fff; font-weight:700; font-size:16px; text-decoration:none; border-radius:12px;">
+          Order Now →
+        </a>
+      </div>
     </div>`;
 }
 
