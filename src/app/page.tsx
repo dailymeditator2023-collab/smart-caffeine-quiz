@@ -93,10 +93,10 @@ function RegistrationView() {
             className="text-3xl font-bold text-brand-orange mb-1"
             style={{ fontFamily: "var(--font-bricolage)" }}
           >
-            How Smart Are You?
+            Smart Caffeine Quiz
           </h1>
           <p className="text-text-secondary text-sm">
-            by Smart Caffeine · Weekly Quiz Challenge
+            Play & Win Cash · Weekly Challenge
           </p>
         </div>
 

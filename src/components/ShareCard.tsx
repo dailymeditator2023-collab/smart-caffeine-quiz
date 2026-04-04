@@ -64,7 +64,7 @@ export default function ShareCard({
     // Week badge
     ctx.font = "24px system-ui, sans-serif";
     ctx.fillStyle = "rgba(255,255,255,0.5)";
-    ctx.fillText(`HOW SMART ARE YOU? · WEEK ${weekNumber}`, 540, 260);
+    ctx.fillText(`SMART CAFFEINE QUIZ · WEEK ${weekNumber}`, 540, 260);
 
     // Topic pill
     const topicText = `${topicEmoji} ${topic}`;
@@ -132,7 +132,7 @@ export default function ShareCard({
 
     // Download
     const link = document.createElement("a");
-    link.download = `brain-buzz-week${weekNumber}-${topic.toLowerCase().replace(/\s+/g, "-")}.png`;
+    link.download = `smart-caffeine-quiz-week${weekNumber}-${topic.toLowerCase().replace(/\s+/g, "-")}.png`;
     link.href = canvas.toDataURL("image/png");
     link.click();
   }, [score, timeSeconds, topic, topicEmoji, weekNumber, streak, badges]);

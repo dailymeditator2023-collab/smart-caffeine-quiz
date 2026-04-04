@@ -2,6 +2,9 @@ import { NextRequest, NextResponse } from "next/server";
 import { getSupabase } from "@/lib/supabase";
 import { getWeekNumber } from "@/lib/week";
 import { calculateBadges } from "@/lib/badges";
+import { sendEmail } from "@/lib/email";
+import { buildScoreRecapEmail } from "@/lib/email-templates/score-recap";
+import { getTopicByDbName } from "@/lib/topics";
 import type { AnswerBreakdown } from "@/lib/types";
 
 export const dynamic = "force-dynamic";
@@ -31,7 +34,7 @@ export async function POST(req: NextRequest) {
   // 1. Verify user exists
   const { data: user, error: userError } = await supabase
     .from("users")
-    .select("id, streak, last_played_week")
+    .select("id, name, streak, last_played_week")
     .eq("email", normalizedEmail)
     .single();
 
@@ -157,6 +160,26 @@ export async function POST(req: NextRequest) {
     .or(`score.gt.${score},and(score.eq.${score},time_seconds.lt.${time_seconds})`)
 
   const rank = (rankData?.length ?? 0) + 1;
+
+  // Fire-and-forget: send score recap email (don't block the response)
+  const topicInfo = getTopicByDbName(topic);
+  if (topicInfo) {
+    const emailData = buildScoreRecapEmail({
+      userName: user.name,
+      topic: topicInfo.name,
+      topicEmoji: topicInfo.emoji,
+      score,
+      timeSeconds: time_seconds,
+      badges,
+      rank,
+      weekNumber,
+    });
+    sendEmail({
+      to: normalizedEmail,
+      subject: emailData.subject,
+      html: emailData.html,
+    }).catch((err) => console.error("Score recap email failed:", err));
+  }
 
   return NextResponse.json({
     score,

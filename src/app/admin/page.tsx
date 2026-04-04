@@ -20,6 +20,12 @@ interface AdminData {
   badgeCounts: Record<string, number>;
   recentUsers: { name: string; email: string; phone: string; streak: number; created_at: string }[];
   recentAttempts: { email: string; topic: string; score: number; time_seconds: number; week_number: number; created_at: string }[];
+  emailStats: {
+    totalClicks: number;
+    clicksByCampaign: Record<string, number>;
+    clicksByType: Record<string, number>;
+    clicksByDay: Record<string, number>;
+  };
 }
 
 function StatCard({ label, value, sub }: { label: string; value: string | number; sub?: string }) {
@@ -211,6 +217,48 @@ export default function AdminPage() {
                 ))}
               {Object.keys(data.badgeCounts).length === 0 && (
                 <p className="text-[#9ca3af] text-sm">No badges earned yet</p>
+              )}
+            </div>
+          </div>
+        </div>
+
+        {/* Email Click Stats */}
+        <div className="grid md:grid-cols-2 gap-6 mt-6">
+          <div className="bg-[#1e1e1e] rounded-xl p-5 border border-white/5">
+            <h2 className="font-bold text-white mb-3">📧 Email Clicks by Campaign</h2>
+            <div className="space-y-2">
+              {Object.entries(data.emailStats.clicksByCampaign).length === 0 ? (
+                <p className="text-[#9ca3af] text-sm">No email clicks yet</p>
+              ) : (
+                Object.entries(data.emailStats.clicksByCampaign)
+                  .sort(([, a], [, b]) => b - a)
+                  .map(([campaign, count]) => (
+                    <div key={campaign} className="flex items-center justify-between text-sm">
+                      <span className="text-white">{campaign.replace(/_/g, " ")}</span>
+                      <span className="font-bold text-[#ff6633]">{count} clicks</span>
+                    </div>
+                  ))
+              )}
+              <div className="pt-2 border-t border-white/5 flex justify-between text-sm">
+                <span className="text-[#9ca3af]">Total clicks</span>
+                <span className="font-bold text-white">{data.emailStats.totalClicks}</span>
+              </div>
+            </div>
+          </div>
+          <div className="bg-[#1e1e1e] rounded-xl p-5 border border-white/5">
+            <h2 className="font-bold text-white mb-3">🔗 Clicks by Link Type</h2>
+            <div className="space-y-2">
+              {Object.entries(data.emailStats.clicksByType).length === 0 ? (
+                <p className="text-[#9ca3af] text-sm">No click data yet</p>
+              ) : (
+                Object.entries(data.emailStats.clicksByType)
+                  .sort(([, a], [, b]) => b - a)
+                  .map(([type, count]) => (
+                    <div key={type} className="flex items-center justify-between text-sm">
+                      <span className="text-white">{type.replace(/_/g, " ")}</span>
+                      <span className="font-bold text-[#ff6633]">{count} clicks</span>
+                    </div>
+                  ))
               )}
             </div>
           </div>

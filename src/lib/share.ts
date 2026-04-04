@@ -12,7 +12,7 @@ export function getShareText(params: {
   const { score, timeSeconds, topic, weekNumber, streak } = params;
   const time = formatTime(timeSeconds);
 
-  let text = `🧠 I scored ${score}/10 on Smart Caffeine's ${topic} Quiz (Week ${weekNumber}) in ${time}!\n`;
+  let text = `🧠 I scored ${score}/10 on Smart Caffeine Quiz — ${topic} (Week ${weekNumber}) in ${time}!\n`;
   text += `⚠️ One attempt only — no retries!\n`;
 
   if (streak >= 2) {
@@ -20,7 +20,7 @@ export function getShareText(params: {
   }
 
   text += `⚡ Beat my score → ${APP_URL}\n\n`;
-  text += `#SmartCaffeine #BrainBuzz`;
+  text += `#SmartCaffeineQuiz #PlayAndWin`;
 
   return text;
 }

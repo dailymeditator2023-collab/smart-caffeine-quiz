@@ -135,6 +135,26 @@ export async function GET() {
     created_at: a.created_at,
   }));
 
+  // Email click stats
+  const { data: emailClicks } = await supabase
+    .from("email_clicks")
+    .select("campaign, link_type, clicked_at")
+    .order("clicked_at", { ascending: false });
+
+  const clicks = emailClicks || [];
+  const totalClicks = clicks.length;
+
+  const clicksByCampaign: Record<string, number> = {};
+  const clicksByType: Record<string, number> = {};
+  const clicksByDay: Record<string, number> = {};
+
+  for (const c of clicks) {
+    clicksByCampaign[c.campaign] = (clicksByCampaign[c.campaign] || 0) + 1;
+    clicksByType[c.link_type] = (clicksByType[c.link_type] || 0) + 1;
+    const day = new Date(c.clicked_at).toISOString().split("T")[0];
+    clicksByDay[day] = (clicksByDay[day] || 0) + 1;
+  }
+
   return NextResponse.json({
     currentWeek,
     overview: {
@@ -152,5 +172,11 @@ export async function GET() {
     badgeCounts,
     recentUsers,
     recentAttempts,
+    emailStats: {
+      totalClicks,
+      clicksByCampaign,
+      clicksByType,
+      clicksByDay,
+    },
   });
 }

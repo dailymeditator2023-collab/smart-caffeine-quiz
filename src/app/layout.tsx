@@ -15,11 +15,11 @@ const bricolage = Bricolage_Grotesque({
 });
 
 export const metadata: Metadata = {
-  title: "How Smart Are You? — Smart Caffeine Weekly Quiz",
+  title: "Smart Caffeine Quiz — Play & Win Cash",
   description:
     "Test your knowledge across 6 topics! Score high, earn badges, climb leaderboards, and share your results. New questions every week. Powered by Smart Caffeine.",
   openGraph: {
-    title: "How Smart Are You? — Smart Caffeine Weekly Quiz",
+    title: "Smart Caffeine Quiz — Play & Win Cash",
     description:
       "6 topics. 10 questions. One attempt. Can you top the leaderboard?",
     type: "website",
@@ -27,7 +27,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "How Smart Are You? — Smart Caffeine Weekly Quiz",
+    title: "Smart Caffeine Quiz — Play & Win Cash",
     description:
       "6 topics. 10 questions. One attempt. Can you top the leaderboard?",
   },

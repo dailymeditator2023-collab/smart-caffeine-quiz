@@ -12,7 +12,7 @@ export default function NavBar() {
             className="font-bold text-lg text-brand-orange"
             style={{ fontFamily: "var(--font-bricolage)" }}
           >
-            How Smart Are You?
+            Smart Caffeine Quiz
           </span>
         </Link>
 
