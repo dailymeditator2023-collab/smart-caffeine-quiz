@@ -11,7 +11,7 @@ function getResend(): Resend {
   return resendClient;
 }
 
-const FROM_ADDRESS = "Smart Caffeine <onboarding@resend.dev>";
+const FROM_ADDRESS = "Smart Caffeine Quiz <quiz@getsmartcaffeine.com>";
 
 export async function sendEmail({
   to,
